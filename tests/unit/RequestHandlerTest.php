@@ -7,11 +7,11 @@ use PHPUnit\Framework\TestCase;
 
 class RequestHandlerTest extends TestCase
 {
-    public function testBindApiKey()
+    public function testBindApiKey(): void
     {
         $this->assertEquals(
-            ['query' => ['api_key' => 'katiau']],
-            RequestHandler::bindApiKeyToQueryString([], 'katiau')
+            ['auth' => ['katiau', '']],
+            RequestHandler::bindApiKeyToHeader([], 'katiau')
         );
     }
 }

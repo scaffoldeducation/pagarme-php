@@ -10,7 +10,7 @@ class RoutesTest extends TestCase
     /**
      * @param mixed $subject
      */
-    public function assertIsCallable($subject)
+    public static function assertIsCallable($subject, $message = ''): void
     {
         $type = gettype($subject);
 
@@ -21,33 +21,37 @@ class RoutesTest extends TestCase
         );
     }
 
-    public function testTransactionRoutes()
+    public function testOrderRoutes(): void
     {
-        $routes = Routes::transactions();
+        $routes = Routes::orders();
+        
+        $this->assertObjectHasAttribute('base', $routes);
+        $this->assertIsCallable($routes->base);
+        $this->assertObjectHasAttribute('details', $routes);
+        $this->assertIsCallable($routes->details);
+        $this->assertObjectHasAttribute('addCharge', $routes);
+        $this->assertIsCallable($routes->addCharge);
+        $this->assertobjecthasattribute('closed', $routes);
+        $this->assertiscallable($routes->closed);
+    }
+
+    public function testOrderItemRoutes(): void
+    {
+        $routes = Routes::orderItems();
 
         $this->assertObjectHasAttribute('base', $routes);
         $this->assertIsCallable($routes->base);
         $this->assertObjectHasAttribute('details', $routes);
         $this->assertIsCallable($routes->details);
-        $this->assertObjectHasAttribute('capture', $routes);
-        $this->assertIsCallable($routes->capture);
-        $this->assertobjecthasattribute('refund', $routes);
-        $this->assertiscallable($routes->refund);
-        $this->assertobjecthasattribute('payables', $routes);
-        $this->assertiscallable($routes->payables);
-        $this->assertobjecthasattribute('payablesDetails', $routes);
-        $this->assertiscallable($routes->payablesDetails);
-        $this->assertobjecthasattribute('operations', $routes);
-        $this->assertiscallable($routes->operations);
-        $this->assertobjecthasattribute('collectPayment', $routes);
-        $this->assertiscallable($routes->collectPayment);
-        $this->assertobjecthasattribute('events', $routes);
-        $this->assertiscallable($routes->events);
-        $this->assertobjecthasattribute('calculateInstallments', $routes);
-        $this->assertiscallable($routes->calculateInstallments);
+        $this->assertObjectHasAttribute('update', $routes);
+        $this->assertIsCallable($routes->update);
+        $this->assertObjectHasAttribute('delete', $routes);
+        $this->assertIsCallable($routes->delete);
+        $this->assertObjectHasAttribute('deleteAll', $routes);
+        $this->assertIsCallable($routes->deleteAll);
     }
 
-    public function testCustomerRoutes()
+    public function testCustomerRoutes(): void
     {
         $routes = Routes::customers();
 
@@ -57,7 +61,19 @@ class RoutesTest extends TestCase
         $this->assertIsCallable($routes->details);
     }
 
-    public function testCardRoutes()
+    public function testAddressRoutes(): void
+    {
+        $routes = Routes::addresses();
+
+        $this->assertObjectHasAttribute('base', $routes);
+        $this->assertIsCallable($routes->base);
+        $this->assertObjectHasAttribute('details', $routes);
+        $this->assertIsCallable($routes->details);
+        $this->assertObjectHasAttribute('delete', $routes);
+        $this->assertIsCallable($routes->delete);
+    }
+
+    public function testCardRoutes(): void
     {
         $routes = Routes::cards();
 
@@ -65,160 +81,33 @@ class RoutesTest extends TestCase
         $this->assertIsCallable($routes->base);
         $this->assertObjectHasAttribute('details', $routes);
         $this->assertIsCallable($routes->details);
-    }
-
-    public function testBankAccountRoutes()
-    {
-        $routes = Routes::bankAccounts();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-    }
-
-    public function testPlansRoutes()
-    {
-        $routes = Routes::plans();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-    }
-
-    public function testBulkAnticipationsRoutes()
-    {
-        $routes = Routes::bulkAnticipations();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('limits', $routes);
-        $this->assertIsCallable($routes->limits);
-        $this->assertObjectHasAttribute('confirm', $routes);
-        $this->assertIsCallable($routes->confirm);
-        $this->assertObjectHasAttribute('cancel', $routes);
-        $this->assertIsCallable($routes->cancel);
         $this->assertObjectHasAttribute('delete', $routes);
+        $this->assertIsCallable($routes->delete);
+        $this->assertObjectHasAttribute('renew', $routes);
+        $this->assertIsCallable($routes->renew);
     }
 
-    public function testPaymentLinksRoutes()
+    public function testChargeRoutes(): void
     {
-        $routes = Routes::paymentLinks();
+        $routes = Routes::charges();
 
         $this->assertObjectHasAttribute('base', $routes);
         $this->assertIsCallable($routes->base);
         $this->assertObjectHasAttribute('details', $routes);
         $this->assertIsCallable($routes->details);
+        $this->assertObjectHasAttribute('capture', $routes);
+        $this->assertIsCallable($routes->capture);
+        $this->assertObjectHasAttribute('updateCard', $routes);
+        $this->assertIsCallable($routes->updateCard);
+        $this->assertObjectHasAttribute('updateBillingDue', $routes);
+        $this->assertIsCallable($routes->updateBillingDue);
+        $this->assertObjectHasAttribute('updatePaymentMethod', $routes);
+        $this->assertIsCallable($routes->updatePaymentMethod);
+        $this->assertObjectHasAttribute('holdCharge', $routes);
+        $this->assertIsCallable($routes->holdCharge);
+        $this->assertObjectHasAttribute('confirmCash', $routes);
+        $this->assertIsCallable($routes->confirmCash);
         $this->assertObjectHasAttribute('cancel', $routes);
         $this->assertIsCallable($routes->cancel);
-    }
-
-    public function testTransfersRoutes()
-    {
-        $routes = Routes::transfers();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-        $this->assertObjectHasAttribute('cancel', $routes);
-        $this->assertIsCallable($routes->cancel);
-    }
-
-    public function testRecipientRoutes()
-    {
-        $routes = Routes::recipients();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-        $this->assertObjectHasAttribute('balance', $routes);
-        $this->assertIsCallable($routes->balance);
-        $this->assertObjectHasAttribute('balanceOperations', $routes);
-        $this->assertIsCallable($routes->balanceOperations);
-        $this->assertObjectHasAttribute('balanceOperation', $routes);
-        $this->assertIsCallable($routes->balanceOperation);
-    }
-
-    public function testSubscriptionRoutes()
-    {
-        $routes = Routes::subscriptions();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-        $this->assertObjectHasAttribute('cancel', $routes);
-        $this->assertIsCallable($routes->cancel);
-        $this->assertObjectHasAttribute('transactions', $routes);
-        $this->assertIsCallable($routes->transactions);
-        $this->assertObjectHasAttribute('settleCharges', $routes);
-        $this->assertIsCallable($routes->settleCharges);
-    }
-
-    public function testRefundsRoute()
-    {
-        $routes = Routes::refunds();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-    }
-
-    public function testBalanceRoutes()
-    {
-        $routes = Routes::balances();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-    }
-
-    public function testPostbackRoutes()
-    {
-        $routes = Routes::postbacks();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-        $this->assertObjectHasAttribute('redeliver', $routes);
-        $this->assertIsCallable($routes->redeliver);
-    }
-
-    public function testPayableRoutes()
-    {
-        $routes = Routes::payables();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-    }
-
-    public function testBalanceOperationsRoutes()
-    {
-        $routes = Routes::balanceOperations();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-        $this->assertObjectHasAttribute('details', $routes);
-        $this->assertIsCallable($routes->details);
-    }
-
-    public function testChargebacksRoute()
-    {
-        $routes = Routes::chargebacks();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
-    }
-
-    public function testSearchRoute()
-    {
-        $routes = Routes::search();
-
-        $this->assertObjectHasAttribute('base', $routes);
-        $this->assertIsCallable($routes->base);
     }
 }

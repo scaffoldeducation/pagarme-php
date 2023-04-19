@@ -7,39 +7,36 @@ use PHPUnit\Framework\TestCase;
 
 class ResponseHandlerTest extends TestCase
 {
-    public function testReturnTypeOnSuccess()
+    public function testReturnTypeOnSuccess(): void
     {
         $handler = new ResponseHandler();
 
         $response = $handler->success('{"foo": "bar"}');
 
-        $this->assertInstanceOf(\stdClass::class, $response);
+        $this->assertIsArray($response);
     }
 
-    public function testReturnUsage()
+    public function testReturnUsage(): void
     {
         $response = ResponseHandler::success('{"foo": "bar"}');
 
-        $this->assertObjectHasAttribute('foo', $response);
-        $this->assertEquals('bar', $response->foo);
+        $this->assertArrayHasKey('foo', $response);
+        $this->assertEquals('bar', $response["foo"]);
     }
 
-    public function testReturnListOfObjects()
+    public function testReturnListOfObjects(): void
     {
         $response = ResponseHandler::success('[{"foo": "bar"},{"bar": "baz"}]');
-
-        $this->assertInternalType('array', $response, 'The list must be an array');
-        $this->assertObjectHasAttribute('foo', $response[0], 'The first index must be an object');
-        $this->assertEquals('bar', $response[0]->foo);
-        $this->assertObjectHasAttribute('bar', $response[1], 'The second index must be an object');
-        $this->assertEquals('baz', $response[1]->bar);
+        
+        $this->assertArrayHasKey('foo', $response[0], 'The first index must be an array');
+        $this->assertEquals('bar', $response[0]["foo"]);
+        $this->assertArrayHasKey('bar', $response[1], 'The second index must be an array');
+        $this->assertEquals('baz', $response[1]["bar"]);
     }
-
-    /**
-     * @expectedException \PagarMe\Exceptions\InvalidJsonException
-     */
-    public function testUnparseablePayload()
+    
+    public function testUnparseablePayload(): void
     {
+        $this->expectException(\PagarMe\Exceptions\InvalidJsonException::class);
         $response = ResponseHandler::success('{"foo": "bar"');
     }
 }

@@ -21,15 +21,19 @@ abstract class Endpoint
     /**
      * @var string
      */
+    const PATCH = 'PATCH';
+    /**
+     * @var string
+     */
     const DELETE = 'DELETE';
 
     /**
-     * @var \PagarMe\Client
+     * @var Client
      */
-    protected $client;
+    protected Client $client;
 
     /**
-     * @param \PagarMe\Client $client
+     * @param Client $client
      */
     public function __construct(Client $client)
     {

@@ -5,7 +5,7 @@ namespace PagarMe\Endpoints;
 use PagarMe\Exceptions\PagarMeException;
 use PagarMe\Routes;
 
-class Cards extends Endpoint
+class Orders extends Endpoint
 {
     /**
      * @param array $payload
@@ -17,7 +17,7 @@ class Cards extends Endpoint
     {
         return $this->client->request(
             self::POST,
-            Routes::cards()->base($payload['customer_id']),
+            Routes::orders()->base(),
             ['json' => $payload]
         );
     }
@@ -28,11 +28,11 @@ class Cards extends Endpoint
      * @return array
      * @throws PagarMeException
      */
-    public function update(array $payload): array
+    public function addCharge(array $payload): array
     {
         return $this->client->request(
-            self::PUT,
-            Routes::cards()->details($payload['customer_id'], $payload['card_id']),
+            self::POST,
+            Routes::orders()->addCharge(),
             ['json' => $payload]
         );
     }
@@ -47,7 +47,7 @@ class Cards extends Endpoint
     {
         return $this->client->request(
             self::GET,
-            Routes::cards()->base($payload['customer_id']),
+            Routes::orders()->base(),
             ['query' => $payload]
         );
     }
@@ -62,7 +62,7 @@ class Cards extends Endpoint
     {
         return $this->client->request(
             self::GET,
-            Routes::cards()->details($payload['customer_id'], $payload['card_id'])
+            Routes::orders()->details($payload['id'])
         );
     }
 
@@ -72,11 +72,12 @@ class Cards extends Endpoint
      * @return array
      * @throws PagarMeException
      */
-    public function delete(array $payload): array
+    public function closed(array $payload): array
     {
         return $this->client->request(
-            self::DELETE,
-            Routes::cards()->delete($payload['customer_id'], $payload['card_id'])
+            self::PATCH,
+            Routes::orders()->closed($payload['id']),
+            ['json' => $payload]
         );
     }
 }

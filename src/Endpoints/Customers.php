@@ -2,18 +2,18 @@
 
 namespace PagarMe\Endpoints;
 
-use PagarMe\Client;
+use PagarMe\Exceptions\PagarMeException;
 use PagarMe\Routes;
-use PagarMe\Endpoints\Endpoint;
 
 class Customers extends Endpoint
 {
     /**
      * @param array $payload
      *
-     * @return \ArrayObject
+     * @return array
+     * @throws PagarMeException
      */
-    public function create(array $payload)
+    public function create(array $payload): array
     {
         return $this->client->request(
             self::POST,
@@ -23,11 +23,27 @@ class Customers extends Endpoint
     }
 
     /**
+     * @param array $payload
+     *
+     * @return array
+     * @throws PagarMeException
+     */
+    public function update(array $payload): array
+    {
+        return $this->client->request(
+            self::PUT,
+            Routes::customers()->details($payload['customer_id']),
+            ['json' => $payload]
+        );
+    }
+
+    /**
      * @param array|null $payload
      *
-     * @return \ArrayObject
+     * @return array
+     * @throws PagarMeException
      */
-    public function getList(array $payload = null)
+    public function getList(array $payload = null): array
     {
         return $this->client->request(
             self::GET,
@@ -39,9 +55,10 @@ class Customers extends Endpoint
     /**
      * @param array $payload
      *
-     * @return \ArrayObject
+     * @return array
+     * @throws PagarMeException
      */
-    public function get(array $payload)
+    public function get(array $payload): array
     {
         return $this->client->request(
             self::GET,

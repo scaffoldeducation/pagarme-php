@@ -2,15 +2,14 @@
 
 namespace PagarMe\Test\Endpoints;
 
-use PagarMe\Client;
-use PagarMe\Endpoints\Customers;
+use PagarMe\Endpoints\Endpoint;
 use PagarMe\Test\Endpoints\PagarMeTestCase;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
-final class CustomerTest extends PagarMeTestCase
+final class CustomersTest extends PagarMeTestCase
 {
-    public function customerProvider()
+    public function customerProvider(): array
     {
         return [[[
             'customer' => new MockHandler([
@@ -26,7 +25,7 @@ final class CustomerTest extends PagarMeTestCase
     /**
      * @dataProvider customerProvider
      */
-    public function testCustomerCreate($mock)
+    public function testCustomerCreate($mock): void
     {
         $requestsContainer = [];
         $client = self::buildClient($requestsContainer, $mock['customer']);
@@ -51,15 +50,15 @@ final class CustomerTest extends PagarMeTestCase
         ]);
 
         $this->assertEquals(
-            '/1/customers',
+            '/core/v5/customers',
             self::getRequestUri($requestsContainer[0])
         );
         $this->assertEquals(
-            Customers::POST,
+            Endpoint::POST,
             self::getRequestMethod($requestsContainer[0])
         );
         $this->assertEquals(
-            json_decode(self::jsonMock('CustomerMock')),
+            json_decode(self::jsonMock('CustomerMock'), true),
             $response
         );
     }
@@ -67,7 +66,7 @@ final class CustomerTest extends PagarMeTestCase
     /**
      * @dataProvider customerProvider
      */
-    public function testCustomerGetList($mock)
+    public function testCustomerGetList($mock): void
     {
         $requestsContainer = [];
         $client = self::buildClient($requestsContainer, $mock['list']);
@@ -75,15 +74,15 @@ final class CustomerTest extends PagarMeTestCase
         $response = $client->customers()->getList();
         
         $this->assertEquals(
-            '/1/customers',
+            '/core/v5/customers',
             self::getRequestUri($requestsContainer[0])
         );
         $this->assertEquals(
-            Customers::GET,
+            Endpoint::GET,
             self::getRequestMethod($requestsContainer[0])
         );
         $this->assertEquals(
-            json_decode(self::jsonMock('CustomerListMock')),
+            json_decode(self::jsonMock('CustomerListMock'), true),
             $response
         );
 
@@ -95,11 +94,11 @@ final class CustomerTest extends PagarMeTestCase
 
         $query = self::getQueryString($requestsContainer[1]);
 
-        $this->assertContains('name=Fulano%20da%20Silva', $query);
-        $this->assertContains('email=fulano%40silva.com', $query);
-        $this->assertContains('id=123456', $query);
+        $this->assertStringContainsString('name=Fulano%20da%20Silva', $query);
+        $this->assertStringContainsString('email=fulano%40silva.com', $query);
+        $this->assertStringContainsString('id=123456', $query);
         $this->assertEquals(
-            json_decode('[]'),
+            json_decode('[]', true),
             $response
         );
     }
@@ -107,7 +106,7 @@ final class CustomerTest extends PagarMeTestCase
     /**
      * @dataProvider customerProvider
      */
-    public function testCustomerGet($mock)
+    public function testCustomerGet($mock): void
     {
         $requestsContainer = [];
         $client = self::buildClient($requestsContainer, $mock['customer']);
@@ -115,15 +114,15 @@ final class CustomerTest extends PagarMeTestCase
         $response = $client->customers()->get(['id' => 1]);
 
         $this->assertEquals(
-            '/1/customers/1',
+            '/core/v5/customers/1',
             self::getRequestUri($requestsContainer[0])
         );
         $this->assertEquals(
-            Customers::GET,
+            Endpoint::GET,
             self::getRequestMethod($requestsContainer[0])
         );
         $this->assertEquals(
-            json_decode(self::jsonMock('CustomerMock')),
+            json_decode(self::jsonMock('CustomerMock'), true),
             $response
         );
     }

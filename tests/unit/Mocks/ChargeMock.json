@@ -1,0 +1,79 @@
+{
+  "id": "ch_gklg9843ksd587",
+  "code": "45645756756",
+  "gateway_id": "26545",
+  "amount": 50990,
+  "status": "pending",
+  "currency": "BRL",
+  "payment_method": "boleto",
+  "created_at": "2022-05-25T13:32:30Z",
+  "updated_at": "2022-05-25T13:32:31Z",
+  "order": {
+    "id": "or_vlfsd0534sd",
+    "code": "45645756756",
+    "amount": 50990,
+    "closed": true,
+    "created_at": "2022-05-25T13:32:30Z",
+    "updated_at": "2022-05-25T13:32:31Z",
+    "closed_at": "2022-05-25T13:32:30Z",
+    "currency": "BRL",
+    "status": "pending",
+    "customer_id": "ch_gklg9843ksd587"
+  },
+  "customer": {
+    "id": "cus_aa3aQMasddRx0WZ",
+    "name": "Usuário Teste",
+    "email": "teste@gmail.com",
+    "document": "06953424493",
+    "type": "individual",
+    "delinquent": false,
+    "created_at": "2022-05-25T13:15:36Z",
+    "updated_at": "2022-05-25T13:32:30Z",
+    "phones": {
+      "home_phone": {
+        "country_code": "55",
+        "number": "999999999",
+        "area_code": "77"
+      },
+      "mobile_phone": {
+        "country_code": "55",
+        "number": "888888888",
+        "area_code": "77"
+      }
+    }
+  },
+  "last_transaction": {
+    "id": "tran_FGsfS46Gsjhlk",
+    "transaction_type": "boleto",
+    "gateway_id": "26545",
+    "amount": 50990,
+    "status": "generated",
+    "success": true,
+    "url": "https://pagar.me",
+    "pdf": "https://pagar.me?format=pdf",
+    "line": "1234 5678",
+    "barcode": "https://api.pagar.me/core/v5/transactions/tran_FGsfS46Gsjhlk/barcode",
+    "qr_code": "https://api.pagar.me/core/v5/transactions/tran_FGsfS46Gsjhlk/qrcode",
+    "nosso_numero": "543565434",
+    "bank": "000",
+    "document_number": "543565434",
+    "instructions": "Pagar até o vencimento",
+    "due_at": "2022-05-30T23:59:59Z",
+    "billing_address": {
+      "street": "Av. Antônio Carlos Magalhães",
+      "number": "567",
+      "neighborhood": "Centro",
+      "city": "Barreiras",
+      "state": "BA",
+      "country": "BR",
+      "zip_code": "00000000",
+      "line_1": "567, Av. Antônio Carlos Magalhães, Centro"
+    },
+    "created_at": "2022-05-25T13:32:31Z",
+    "updated_at": "2022-05-25T13:32:31Z",
+    "gateway_response": {
+      "code": "200"
+    },
+    "antifraud_response": {}
+  }
+}

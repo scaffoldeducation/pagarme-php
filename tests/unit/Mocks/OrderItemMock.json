@@ -1,0 +1,31 @@
+{
+  "id": "oi_2m5ssf345pP",
+  "type": "product",
+  "description": "Bicicleta Oggi Hacker (Preta, M)",
+  "amount": 50990,
+  "quantity": 1,
+  "status": "active",
+  "created_at": "2022-06-08T18:43:45Z",
+  "updated_at": "2022-06-08T18:43:45Z",
+  "code": "123342345",
+  "order": {
+    "id": "or_pZgoBsfksldeGLy",
+    "code": "58323427",
+    "amount": 50990,
+    "closed": true,
+    "created_at": "2022-06-08T18:43:45Z",
+    "updated_at": "2022-06-08T18:43:49Z",
+    "closed_at": "2022-06-08T18:43:45Z",
+    "currency": "BRL",
+    "status": "paid",
+    "items": [
+      {
+        "id": "oi_2m5ssf345pP",
+        "description": "Bicicleta Oggi Hacker (Preta, M)",
+        "amount": 50990,
+        "quantity": 1,
+        "status": "active"
+      }
+    ]
+  }
+}

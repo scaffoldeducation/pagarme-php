@@ -14,7 +14,7 @@ abstract class PagarMeTestCase extends TestCase
      *
      * @return string
      */
-    protected static function jsonMock($mockName)
+    protected static function jsonMock(string $mockName): string
     {
         return file_get_contents(__DIR__."/../Mocks/$mockName.json");
     }
@@ -24,7 +24,7 @@ abstract class PagarMeTestCase extends TestCase
      *
      * @return string
      */
-    protected static function getRequestMethod($container)
+    protected static function getRequestMethod(array $container): string
     {
         return $container['request']->getMethod();
     }
@@ -34,7 +34,7 @@ abstract class PagarMeTestCase extends TestCase
      *
      * @return string
      */
-    protected static function getRequestUri($container)
+    protected static function getRequestUri(array $container): string
     {
         return $container['request']->getUri()->getPath();
     }
@@ -44,7 +44,7 @@ abstract class PagarMeTestCase extends TestCase
      *
      * @return string
      */
-    protected static function getQueryString($container)
+    protected static function getQueryString(array $container): string
     {
         return $container['request']->getUri()->getQuery();
     }
@@ -54,21 +54,21 @@ abstract class PagarMeTestCase extends TestCase
      *
      * @return string
      */
-    protected static function getBody($container)
+    protected static function getBody(array $container): string
     {
         $requestBody = $container['request']->getBody();
         $bodySize = $requestBody->getSize();
 
         return $requestBody->read($bodySize);
     }
-
+    
     /**
      * @param array $container
      * @param GuzzleHttp\Handler\MockHandler $mock
      *
-     * @return PagarMe\Client
+     * @return Client
      */
-    protected static function buildClient(&$container, $mock)
+    protected static function buildClient(array &$container, $mock): Client
     {
         $history = Middleware::history($container);
 

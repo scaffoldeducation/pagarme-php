@@ -1,100 +1,70 @@
-# Introdução
+## Introdução
 
-Essa SDK foi construída com o intuito de torná-la flexível, de forma que todos possam utilizar todas as features, de todas as versões de API.
+Essa SDK foi construída com o intuito de torná-la flexível, de forma que todos possam utilizar todas as features, de
+todas as versões de API.
 
-Você pode acessar a documentação oficial do Pagar.me acessando esse [link](https://docs.pagar.me).
+Você pode acessar a documentação oficial da PagarMe - v5 acessando esse [link](https://docs.pagar.me/v5/docs).
+
+## Requisitos
+
+* PHP versão 8.0 ou maior;
+* Guzzle Http versão 7.4 ou maior.
 
 ## Índice
 
+- [Introdução](#introdução)
+- [Requisitos](#requisitos)
+- [Índice](#índice)
 - [Instalação](#instalação)
 - [Configuração](#configuração)
-- [Transações](#transações)
-  - [Criando uma transação](#criando-uma-transação)
-  - [Capturando uma transação](#capturando-uma-transação)
-  - [Estornando uma transação](#estornando-uma-transação)
-    - [Estornando uma transação parcialmente](#estornando-uma-transação-parcialmente)
-    - [Estornando uma transação com split](#estornando-uma-transação-com-split)
-  - [Retornando transações](#retornando-transações)
-  - [Retornando uma transação](#retornando-uma-transação)
-  - [Retornando recebíveis de uma transação](#retornando-recebíveis-de-uma-transação)
-  - [Retornando um recebível de uma transação](#retornando-um-recebível-de-uma-transação)
-  - [Retornando o histórico de operações de uma transação](#retornando-o-histórico-de-operações-de-uma-transação)
-  - [Notificando cliente sobre boleto a ser pago](#notificando-cliente-sobre-boleto-a-ser-pago)
-  - [Retornando eventos de uma transação](#retornando-eventos-de-uma-transação)
-  - [Calculando Pagamentos Parcelados](#calculando-pagamentos-parcelados)
-  - [Testando pagamento de boletos](#testando-pagamento-de-boletos)
-- [Estornos](#estornos)
-- [Chargebacks](#chargebacks)
+  - [Definindo headers customizados](#definindo-headers-customizados)
+- [Pedidos](#pedidos)
+  - [Criando um pedido](#criando-um-pedido)
+  - [Incluindo cobrança em pedido aberto](#incluindo-cobrança-em-pedido-aberto)
+  - [Fechando um pedido](#fechando-um-pedido)
+  - [Retornando pedidos](#retornando-pedidos)
+  - [Retornando um pedido](#retornando-um-pedido)
+- [Itens em pedidos abertos](#itens-em-pedidos-abertos)
+  - [Incluindo item](#incluindo-item)
+  - [Atualizando item](#atualizando-item)
+  - [Retornando item](#retornando-item)
+  - [Deletando item](#deletando-item)
+  - [Removendo todos os itens](#removendo-todos-os-itens)
+- [Cobranças](#cobranças)
+  - [Capturando cobrança](#capturando-cobrança)
+  - [Editando cartão de cobrança](#editando-cartão-de-cobrança)
+  - [Editando data de vencimento da cobrança](#editando-data-de-vencimento-da-cobrança)
+  - [Editando método de pagamento da cobrança](#editando-método-de-pagamento-da-cobrança)
+  - [Retornando todas as cobranças](#retornando-todas-as-cobranças)
+  - [Retornando uma cobrança](#retornando-uma-cobrança)
+  - [Confirmando uma cobrança (cash)](#confirmando-uma-cobrança-cash)
+  - [Retentando uma cobrança manualmente](#retentando-uma-cobrança-manualmente)
+  - [Cancelando uma cobrança](#cancelando-uma-cobrança)
 - [Cartões](#cartões)
-  - [Criando cartões](#criando-cartões)
+  - [Criando um cartão](#criando-um-cartão)
+  - [Atualizando um cartão](#atualizando-um-cartão)
   - [Retornando cartões](#retornando-cartões)
   - [Retornando um cartão](#retornando-um-cartão)
-- [Planos](#planos)
-  - [Criando planos](#criando-planos)
-  - [Retornando planos](#retornando-planos)
-  - [Retornando um plano](#retornando-um-plano)
-  - [Atualizando um plano](#atualizando-um-plano)
-- [Assinaturas](#assinaturas)
-  - [Criando assinaturas](#criando-assinaturas)
-  - [Split com assinatura](#split-com-assinatura)
-  - [Retornando uma assinatura](#retornando-uma-assinatura)
-  - [Retornando assinaturas](#retornando-assinaturas)
-  - [Atualizando uma assinatura](#atualizando-uma-assinatura)
-  - [Cancelando uma assinatura](#cancelando-uma-assinatura)
-  - [Transações de assinatura](#transações-de-assinatura)
-  - [Pulando cobranças](#pulando-cobranças)
-- [Postbacks](#postbacks)
-  - [Retornando postbacks](#retornando-postbacks)
-  - [Retornando um postback](#retornando-um-postback)
-  - [Reenviando um Postback](#reenviando-um-postback)
-- [Saldo do recebedor principal](#saldo-do-recebedor-principal)
-- [Operações de saldo](#operações-de-saldo)
-  - [Histórico das operações](#histórico-das-operações)
-  - [Histórico de uma operação específica](#histórico-de-uma-operação-específica)
-- [Recebível](#recebível)
-  - [Retornando recebíveis](#retornando-recebíveis)
-  - [Retornando um recebível](#retornando-um-recebível)
-- [Transferências](#transferências)
-  - [Criando uma transferência](#criando-uma-transferência)
-  - [Retornando transferências](#retornando-transferências)
-  - [Retornando uma transferência](#retornando-uma-transferência)
-  - [Cancelando uma transferência](#cancelando-uma-transferência)
-- [Antecipações](#antecipações)
-  - [Criando uma antecipação](#criando-uma-antecipação)
-  - [Obtendo os limites de antecipação](#obtendo-os-limites-de-antecipação)
-  - [Confirmando uma antecipação building](#confirmando-uma-antecipação-building)
-  - [Cancelando uma antecipação pending](#cancelando-uma-antecipação-pending)
-  - [Deletando uma antecipação building](#deletando-uma-antecipação-building)
-  - [Retornando antecipações](#retornando-antecipações)
-- [Contas bancárias](#contas-bancárias)
-  - [Criando uma conta bancária](#criando-uma-conta-bancária)
-  - [Retornando uma conta bancária](#retornando-uma-conta-bancária)
-  - [Retornando contas bancárias](#retornando-contas-bancárias)
-- [Recebedores](#recebedores)
-  - [Criando um recebedor](#criando-um-recebedor)
-  - [Retornando recebedores](#retornando-recebedores)
-  - [Retornando um recebedor](#retornando-um-recebedor)
-  - [Atualizando um recebedor](#atualizando-um-recebedor)
-  - [Saldo de um recebedor](#saldo-de-um-recebedor)
-  - [Operações de saldo de um recebedor](#operações-de-saldo-de-um-recebedor)
-  - [Operação de saldo específica de um recebedor](#operação-de-saldo-específica-de-um-recebedor)
+  - [Deletando um cartão](#deletando-um-cartão)
 - [Clientes](#clientes)
   - [Criando um cliente](#criando-um-cliente)
+  - [Atualizando um cliente](#atualizando-um-cliente)
   - [Retornando clientes](#retornando-clientes)
   - [Retornando um cliente](#retornando-um-cliente)
-- [Links de pagamento](#links-de-pagamento)
-  - [Criando um link de pagamento](#criando-um-link-de-pagamento)
-  - [Retornando links de pagamento](#retornando-links-de-pagamento)
-  - [Retornando um link de pagamento](#retornando-um-link-de-pagamento)
-  - [Cancelando um link de pagamento](#cancelando-um-link-de-pagamento)
-- [Buscas avançadas (Elasticsearch)](#buscas-avançadas-elasticsearch)
-  - [Realizando uma busca](#realizando-uma-busca)
+- [Endereços do cliente](#endereços-do-cliente)
+  - [Criando um endereço](#criando-um-endereço)
+  - [Atualizando um endereço](#atualizando-um-endereço)
+  - [Retornando endereços](#retornando-endereços)
+  - [Retornando um endereço](#retornando-um-endereço)
+  - [Deletando um endereço](#deletando-um-endereço)
+- [Tratando exceções](#tratando-exceções)
+- [Testes](#testes)
 
 ## Instalação
 
 Instale a biblioteca utilizando o comando
 
-`composer require pagarme/pagarme-php`
+`composer require andreoneres/pagarme-php`
 
 ## Configuração
 
@@ -109,7 +79,8 @@ $pagarme = new PagarMe\Client('SUA_CHAVE_DE_API');
 
 ### Definindo headers customizados
 
-1. Se necessário for é possível definir headers http customizados para os requests. Para isso basta informá-los durante a instanciação do objeto `Client`:
+1. Se necessário for é possível definir headers http customizados para os requests. Para isso basta informá-los durante
+   a instanciação do objeto `Client`:
 
 ```php
 <?php
@@ -121,294 +92,356 @@ $pagarme = new PagarMe\Client(
 ); 
 ```
 
-E então, você pode poderá utilizar o cliente para fazer requisições ao Pagar.me, como nos exemplos abaixo.
+E então, você poderá utilizar o cliente para fazer requisições ao Pagar.me, como nos exemplos abaixo.
 
-## Transações
+## Pedidos
 
-Nesta seção será explicado como utilizar transações no Pagar.me com essa biblioteca.
+Nesta seção será explicado como realizar e manipular pedidos no Pagar.me com essa biblioteca.
 
-### Criando uma transação
+### Criando um pedido
 
 ```php
 <?php
-$transaction = $pagarme->transactions()->create([
-    'amount' => 1000,
-    'payment_method' => 'credit_card',
-    'card_holder_name' => 'Anakin Skywalker',
-    'card_cvv' => '123',
-    'card_number' => '4242424242424242',
-    'card_expiration_date' => '1220',
+$order = $pagarme->orders()->create([
     'customer' => [
-        'external_id' => '1',
         'name' => 'Nome do cliente',
         'type' => 'individual',
-        'country' => 'br',
-        'documents' => [
-          [
-            'type' => 'cpf',
-            'number' => '00000000000'
-          ]
+        'email' => 'cliente@email.com',
+        'document' => '12345678901',
+        'document_type' => 'CPF',
+        'gender' => 'female',
+        'address' => [
+            'country' => 'BR',
+            'state' => 'Bahia',
+            'city' => 'Barreiras',
+            'zip_code' => '00000000',
+            'line_1' => '120, Rua dos Anjos, São Gonçalo',
+            'line_2' => 'apartamento, 1º andar'
         ],
-        'phone_numbers' => [ '+551199999999' ],
-        'email' => 'cliente@email.com'
-    ],
-    'billing' => [
-        'name' => 'Nome do pagador',
-        'address' => [
-          'country' => 'br',
-          'street' => 'Avenida Brigadeiro Faria Lima',
-          'street_number' => '1811',
-          'state' => 'sp',
-          'city' => 'Sao Paulo',
-          'neighborhood' => 'Jardim Paulistano',
-          'zipcode' => '01451001'
-        ]
-    ],
-    'shipping' => [
-        'name' => 'Nome de quem receberá o produto',
-        'fee' => 1020,
-        'delivery_date' => '2018-09-22',
-        'expedited' => false,
-        'address' => [
-          'country' => 'br',
-          'street' => 'Avenida Brigadeiro Faria Lima',
-          'street_number' => '1811',
-          'state' => 'sp',
-          'city' => 'Sao Paulo',
-          'neighborhood' => 'Jardim Paulistano',
-          'zipcode' => '01451001'
-        ]
+        'phones' => [
+            'home_phone' => [
+                'country_code' => '55',
+                'area_code' => '77',
+                'number' => '999305687'
+            ],
+            'mobile_phone' => [
+                'country_code' => '55',
+                'area_code' => '77',
+                'number' => '999305688'
+            ],    
+        ],
+        'birthdate' => '2020-10-10'
     ],
     'items' => [
         [
-          'id' => '1',
-          'title' => 'R2D2',
-          'unit_price' => 300,
-          'quantity' => 1,
-          'tangible' => true
+            'amount' => 12000,
+            'description' => 'Bike OGGI Azul',
+            'quantity' => '3',
+            'code' => 'CODIGO_DO_ITEM_NO_SEU_SISTEMA'
+        ]       
+    ],
+    'shipping' => [
+        'amount' => '1300',
+        'description' => 'Descrição',
+        'recipient_name' => 'João Gomes',
+        'recipient_phone' => '557999235940',
+        'address' => [
+            'country' => 'BR',
+            'state' => 'Bahia',
+            'city' => 'Barreiras',
+            'zip_code' => '00000000',
+            'line_1' => '120, Rua dos Anjos, São Gonçalo',
+            'line_2' => 'apartamento, 1º andar'
         ],
+    ],
+    'payments' => [
         [
-          'id' => '2',
-          'title' => 'C-3PO',
-          'unit_price' => 700,
-          'quantity' => 1,
-          'tangible' => true
+            'payment_method' => 'pix',
+            'pix' => [
+                'expires_in' => 1000,
+                'additional_information' => [
+                    [
+                        'name' => 'Teste',
+                        'value' => 'Este é um teste.'
+                    ]
+                ]   
+            ],
+            'amount' => 10000    
+        ]
+    ],
+    'closed' => false,
+    'antifraud_enabled' => true
+]);
+```
+
+### Incluindo cobrança em pedido aberto
+
+```php
+<?php
+$chargeOrder = $pagarme->orders()->addCharge([
+    'order_id' => 'ID_DO_PEDIDO',
+    'amount' => 40000,
+    'payment' => [
+        'payment_method' => 'boleto',
+        'boleto' => [
+            'bank' => 237,
+            'instructions' => 'Instruções do boleto',
+            'due_at' => '2022-10-10',
+            'nosso_numero' => '242534544',
+            'type' => 'DM',
+            'document_number' => 'Ident. do boleto'
+        ]   
+    ],
+    'due_at' => '2022-10-10',
+    'customer_id' => 'ID_DO_CLIENTE'
+]);
+```
+
+### Fechando um pedido
+
+```php
+<?php
+$closedOrder = $pagarme->orders()->closed([
+    'id' => 'ID_DO_PEDIDO',
+    'status' => 'NOVO_STATUS_PARA_O_PEDIDO'
+]);
+```
+
+### Retornando pedidos
+
+```php
+<?php
+$order = $pagarme->orders()->getList();
+```
+
+Se preferir, é possível utilizar parâmetros para filtrar essa busca, por exemplo, se quiser filtrar apenas pedidos 
+pagas, você pode utilizar o código abaixo:
+
+```php
+<?php
+$order = $pagarme->orders()->getList([
+    'status' => 'paid'
+]);
+```
+
+### Retornando um pedido
+
+```php
+<?php
+$order = $pagarme->orders()->get([
+    'id' => 'ID_DO_PEDIDO'
+]);
+```
+
+## Itens em pedidos abertos
+
+Com a criação de um pedido aberto, é possível que os itens sejam gerenciados.
+
+### Incluindo item
+
+```php
+<?php
+$orderItem = $pagarme->orderItems()->create([
+    'order_id' => 'ID_DO_PEDIDO',
+    'amount' => 12234,
+    'description' => 'Descrição do item',
+    'quantity' => '4',
+    'category' => 'Bikes'
+]);
+```
+
+### Atualizando item
+
+```php
+<?php
+$orderItemUpdated = $pagarme->orderItems()->update([
+    'order_id' => 'ID_DO_PEDIDO',
+    'item_id' => 'ID_DO_ITEM_DO_PEDIDO',
+    'amount' => 12235,
+    'description' => 'Descrição do item',
+    'quantity' => '4',
+    'category' => 'Bikes'
+]);
+```
+
+### Retornando item
+
+```php
+<?php
+$orderItem = $pagarme->orderItems()->get([
+    'order_id' => 'ID_DO_PEDIDO',
+    'item_id' => 'ID_DO_ITEM_DO_PEDIDO'
+]);
+```
+
+### Deletando item
+
+```php
+<?php
+$orderItemDeleted = $pagarme->orderItems()->delete([
+    'order_id' => 'ID_DO_PEDIDO',
+    'item_id' => 'ID_DO_ITEM_DO_PEDIDO'
+]);
+```
+
+### Removendo todos os itens
+
+```php
+<?php
+$orderItemsDeleted = $pagarme->orderItems()->deleteAll([
+    'order_id' => 'ID_DO_PEDIDO'
+]);
+```
+
+## Cobranças
+
+A cobrança é sempre a base de um pagamento. Desta forma, ela pode ser gerada por pedidos e assinaturas.
+
+### Capturando cobrança
+
+```php
+<?php
+$charge = $pagarme->charges()->capture([
+    'charge_id' => 'ID_DA_COBRANCA',
+    'amount' => '10000',
+    'code' => 'CODIGO_DA_COBRANCA_NO_SEU_SISTEMA'
+]);
+```
+
+### Editando cartão de cobrança
+
+```php
+<?php
+$chargeUpdated = $pagarme->charges()->updateCard([
+    'charge_id' => 'ID_DA_COBRANCA',
+    'update_subscription' => false,
+    'card_id' => 'ID_DO_CARTAO',
+    'card_token' => 'TOKEN_DO_CARTAO'
+]);
+```
+
+### Editando data de vencimento da cobrança
+
+```php
+<?php
+$chargeUpdated = $pagarme->charges()->updateBillingDue([
+    'charge_id' => 'ID_DA_COBRANCA',
+    'due_at' => '2022-10-10'
+]);
+```
+
+### Editando método de pagamento da cobrança
+
+```php
+<?php
+$chargeUpdated = $pagarme->charges()->updatePaymentMethod([
+    'charge_id' => 'ID_DA_COBRANCA',
+    'update_subscription' => false,
+    'payment_method' => 'pix',
+    'pix' => [
+        'expires_in' => 1000,
+        'additional_information' => [
+        [
+            'name' => 'Teste',
+            'value' => 'Este é um teste.' 
         ]
     ]
 ]);
 ```
 
-### Capturando uma transação
+### Retornando todas as cobranças
 
 ```php
 <?php
-$capturedTransaction = $pagarme->transactions()->capture([
-    'id' => 'ID_OU_TOKEN_DA_TRANSAÇÃO',
-    'amount' => VALOR_TOTAL_COM_CENTAVOS
-]);
+$charges = $pagarme->charges()->getList();
 ```
 
-### Estornando uma transação
+Se preferir, é possível utilizar parâmetros para filtrar essa busca, por exemplo, se quiser filtrar apenas cobranças
+pagas, você pode utilizar o código abaixo:
 
 ```php
 <?php
-$refundedTransaction = $pagarme->transactions()->refund([
-    'id' => 'ID_OU_TOKEN_DA_TRANSAÇÃO',
-]);
-```
-
-Esta funcionalidade também funciona com estornos parciais, ou estornos com split. Por exemplo:
-
-#### Estornando uma transação parcialmente
-
-```php
-<?php
-$partialRefundedTransaction = $pagarme->transactions()->refund([
-    'id' => 'ID_OU_TOKEN_DA_TRANSAÇÃO',
-    'amount' => 'VALOR_PARCIAL_DO_ESTORNO',
-]);
-```
-
-#### Estornando uma transação com split
-
-```php
-<?php
-$refundedTransactionWithSplit = $pagarme->transactions()->refund([
-    'id' => 'ID_OU_TOKEN_DA_TRANSAÇÃO',
-    'amount' => '6153',
-    'split_rules' => [
-        [
-            'id' => 'sr_cj41w9m4d01ta316d02edaqav',
-            'amount' => '3000',
-            'recipient_id' => 're_cj2wd5ul500d4946do7qtjrvk'
-        ],
-        [
-            'id' => 'sr_cj41w9m4e01tb316dl2f2veyz',
-            'amount' => '3153',
-            'recipient_id' => 're_cj2wd5u2600fecw6eytgcbkd0',
-            'charge_processing_fee' => 'true'
-        ]
-    ]
-]);
-```
-
-### Retornando transações
-
-```php
-<?php
-$transactions = $pagarme->transactions()->getList();
-```
-
-Se necessário, você pode utilizar parâmetros para filtrar essa busca, por exemplo, se quiser filtrar apenas transações pagas, você pode utilizar o código abaixo:
-
-```php
-<?php
-$paidTransactions = $pagarme->transactions()->getList([
+$charges = $pagarme->charges()->getList([
     'status' => 'paid'
 ]);
 ```
 
-### Retornando uma transação
+### Retornando uma cobrança
 
 ```php
 <?php
-$transactions = $pagarme->transactions()->get([
-    'id' => 'ID_DA_TRANSAÇÃO' 
+$charge = $pagarme->charges()->get([
+    'id' => 'ID_DA_COBRANCA'
 ]);
 ```
 
-### Retornando recebíveis de uma transação
+### Confirmando uma cobrança (cash)
 
 ```php
 <?php
-$transactionPayables = $pagarme->transactions()->listPayables([
-    'id' => 'ID_DA_TRANSAÇÃO'
+$confirmedCharge = $pagarme->charges()->confirmCash([
+    'charge_id' => 'ID_DA_COBRANCA',
+    'amount' => 12322,
+    'code' => 'CODIGO_DA_COBRANCA_NO_SEU_SISTEMA',
+    'description' => 'Descrição'
 ]);
 ```
 
-### Retornando um recebível de uma transação
+### Retentando uma cobrança manualmente
 
 ```php
 <?php
-$transactionPayable = $pagarme->transactions()->getPayable([
-    'transaction_id' => 'ID_DA_TRANSAÇÃO',
-    'payable_id' => 'ID_DO_PAYABLE'
+$charge = $pagarme->charges()->holdCharge([
+    'id' => 'ID_DA_COBRANCA'
 ]);
 ```
 
-### Retornando o histórico de operações de uma transação
+### Cancelando uma cobrança
 
 ```php
 <?php
-$transactionOperations = $pagarme->transactions()->listOperations([
-    'id' => 'ID_DA_TRANSAÇÃO',
+$canceledCharge = $pagarme->charges()->cancel([
+    'charge_id' => 'ID_DA_COBRANCA',
+    'amount' => 1232213
 ]);
-```
-
-### Notificando cliente sobre boleto a ser pago
-
-```php
-<?php
-$transactionPaymentNotify = $pagarme->transactions()->collectPayment([
-    'id' => 'ID_DA_TRANSAÇÃO',
-    'email' = > 'cliente@email.com'
-]);
-```
-
-### Retornando eventos de uma transação
-
-```php
-<?php
-$transactionEvents = $pagarme->transactions()->events([
-    'id' => 4262049,
-]);
-```
-
-### Calculando pagamentos parcelados
-
-Essa rota não é obrigatória para uso. É apenas uma forma de calcular pagamentos parcelados com o Pagar.me.
-
-Para fins de explicação, utilizaremos os seguintes valores:
-
-`amount`: 1000,
-`free_installments`: 4,
-`max_installments`: 12,
-`interest_rate`: 3
-
-O parâmetro `free_installments` decide a quantidade de parcelas sem juros. Ou seja, se ele for preenchido com o valor `4`, as quatro primeiras parcelas não terão alteração em seu valor original.
-
-Nessa rota, é calculado juros simples, efetuando o seguinte calculo:
-
-valorTotal = valorDaTransacao * ( 1 + ( taxaDeJuros * numeroDeParcelas ) / 100 )
-
-Então, utilizando os valores acima, na quinta parcela, a conta ficaria dessa maneira:
-
-valorTotal = 1000 * (1 + (3 * 5) / 100)
-
-Então, o valor a ser pago na quinta parcela seria de 15% da compra, totalizando 1150.
-
-Você pode usar o código abaixo caso queira utilizar essa rota:
-
-```php
-<?php
-$calculateInstallments = $pagarme->transactions()->calculateInstallments([
-    'amount' => 'VALOR_DA_TRANSAÇÃO_EM_CENTAVOS',
-    'free_installments' => 'PARCELAS_SEM_JUROS',
-    'max_installments' => 'MÁXIMO_DE_PARCELAS',
-    'interest_rate' => 'TAXA_DE_JUROS_AO_MÊS'
-]);
-```
-
-### Testando pagamento de boletos
-
-```php
-<?php
-$paidBoleto = $pagarme->transactions()->simulateStatus([
-    'id' => 'ID_DA_TRANSAÇÃO',
-    'status' => 'paid'
-]);
-```
-
-## Estornos
-
-É possível visualizar todos os estornos que ocorreram em sua conta, basta utilizar o código abaixo:
-
-```php
-<?php
-$refunds = $pagarme->refunds()->getList();
-```
-
-Se preferir, você pode utilizar filtros para trazer apenas o estorno de uma transação em específico, por exemplo:
-
-```php
-<?php
-$transactionRefunds = $pagarme->refunds()->getList([
-    'transaction_id' => 'ID_DA_TRANSAÇÃO_ESTORNADA'
-]);
-```
-
-## Chargebacks
-
-Da mesma forma que estornos, você pode visualizar todos os chargebacks que ocorreram em sua conta.
-
-```php
-<?php
-$transactionChargebacks = $pagarme->refunds()->getList();
 ```
 
 ## Cartões
 
-Sempre que você faz uma requisição através da nossa API, nós guardamos as informações do portador do cartão, para que, futuramente, você possa utilizá-las em novas cobranças, ou até mesmo implementar features como one-click-buy.
+Sempre que você faz uma requisição através da nossa API, nós guardamos as informações do portador do cartão, para que,
+futuramente, você possa utilizá-las em novas cobranças, ou até mesmo implementar features como one-click-buy.
 
-### Criando cartões
+### Criando um cartão
 
 ```php
 <?php
 $card = $pagarme->cards()->create([
+    'customer_id' => 'ID_DO_CLIENTE',
     'holder_name' => 'Yoda',
     'number' => '4242424242424242',
-    'expiration_date' => '1225',
-    'cvv' => '123'
+    'exp_month' => '12',
+    'exp_year' => '2029',
+    'brand' => 'Mastercard',
+    'label' => 'Label do cartão',
+    'billing_address_id' => 'ID_DO_ENDERECO_DE_PAGAMENTO',
+    'cvv' => '123',
+    'options' => [
+        'verify_card' => true
+    ],
+]);
+```
+
+### Atualizando um cartão
+
+```php
+<?php
+$cardUpdated = $pagarme->cards()->create([
+    'card_id' => 'ID_DO_CARTAO',
+    'customer_id' => 'ID_DO_CLIENTE',
+    'holder_name' => 'Yoda',
+    'exp_month' => '12',
+    'exp_year' => '2029',
+    'billing_address_id' => 'ID_DO_ENDERECO_DE_PAGAMENTO'
 ]);
 ```
 
@@ -416,15 +449,8 @@ $card = $pagarme->cards()->create([
 
 ```php
 <?php
-$cards = $pagarme->cards()->getList();
-```
-
-Se necessário, você pode filtrar por algum dado específico do cartão, por exemplo, o código abaixo irá trazer todos os cartões da bandeira *visa*:
-
-```php
-<?php
-$visaCards = $pagarme->cards()->getList([
-    'brand' => 'visa'
+$cards = $pagarme->cards()->getList([
+    'customer_id' => 'ID_DO_CLIENTE'
 ]);
 ```
 
@@ -433,641 +459,98 @@ $visaCards = $pagarme->cards()->getList([
 ```php
 <?php
 $card = $pagarme->cards()->get([
-    'id' => 'ID_DO_CARTÃO'
+    'card_id' => 'ID_DO_CARTÃO',
+    'customer_id' => 'ID_DO_CLIENTE'
 ]);
 ```
 
-## Planos
-
-Representa uma configuração de recorrência a qual um cliente consegue assinar.
-É a entidade que define o preço, nome e periodicidade da recorrência
-
-### Criando planos
+### Deletando um cartão
 
 ```php
 <?php
-$plan = $pagarme->plans()->create([
-    'amount' => '15000',
-    'days' => '30',
-    'name' => 'The Pro Plan - Platinum - Best ever'
-]);
-```
-
-### Retornando planos
-
-```php
-<?php
-$plans = $pagarme->plans()->getList();
-```
-
-### Retornando um plano
-
-```php
-<?php
-$plan = $pagarme->plans()->get(['id' => '123456']);
-```
-
-### Atualizando um plano
-
-```php
-<?php
-$updatedPlan = $pagarme->plans()->update([
-    'id' => '365403',
-    'name' => 'The Pro Plan - Susan',
-    'trial_days' => '7',
-]);
-```
-
-## Assinaturas
-
-### Criando assinaturas
-
-```php
-<?php
-$substription = $pagarme->subscriptions()->create([
-    'plan_id' => 123456,
-    'payment_method' => 'credit_card',
-    'card_number' => '4111111111111111',
-    'card_holder_name' => 'UNIX TIME',
-    'card_expiration_date' => '0722',
-    'card_cvv' => '123',
-    'postback_url' => 'http://postbacj.url',
-    'customer' => [
-        'email' => 'time@unix.com',
-        'name' => 'Unix Time',
-        'document_number' => '75948706036',
-        'address' => [
-            'street' => 'Rua de Teste',
-            'street_number' => '100',
-            'complementary' => 'Apto 666',
-            'neighborhood' => 'Bairro de Teste',
-            'zipcode' => '11111111'
-        ],
-        'phone' => [
-            'ddd' => '01',
-            'number' => '923456780'
-        ],
-        'sex' => 'other',
-        'born_at' => '1970-01-01',
-    ],
-    'metadata' => [
-        'foo' => 'bar'
-    ]
-]);
-```
-
-**Criando assinaturas utilizando _card_id_**
-
-```php
-<?php
-// Criando o cartão
-$card = $pagarme->cards()->create([
-    'holder_name' => 'Yoda',
-    'number' => '4242424242424242',
-    'expiration_date' => '1225',
-    'cvv' => '123'
-]);
-
-$substription = $pagarme->subscriptions()->create([
-    'plan_id' => 365403,
-    'card_id' => $card->id,
-    'payment_method' => 'credit_card',
-    'postback_url' => 'http://www.pudim.com.br',
-    'customer' => [
-        'email' => 'time@unix.com',
-        'name' => 'Unix Time',
-        'document_number' => '75948706036',
-        'address' => [
-            'street' => 'Rua de Teste',
-            'street_number' => '100',
-            'complementary' => 'Apto 666',
-            'neighborhood' => 'Bairro de Teste',
-            'zipcode' => '88370801'
-        ],
-        'phone' => [
-            'ddd' => '01',
-            'number' => '923456780'
-        ],
-        'sex' => 'other',
-        'born_at' => '1970-01-01',
-    ],
-    'metadata' => [
-        'foo' => 'bar'
-    ]
-]);
-
-```
-
-### Split com assinatura
-
-```php
-<?php
-$substription = $pagarme->subscriptions()->create([
-    'plan_id' => 123456,
-    'card_id' => 'card_abc123456',
-    'payment_method' => 'credit_card',
-    'postback_url' => 'http://www.pudim.com.br',
-    'customer' => [
-        'email' => 'time@unix.com',
-        'name' => 'Unix Time',
-        'document_number' => '75948706036',
-        'address' => [
-            'street' => 'Rua de Teste',
-            'street_number' => '100',
-            'complementary' => 'Apto 666',
-            'neighborhood' => 'Bairro de Teste',
-            'zipcode' => '88370801'
-        ],
-        'phone' => [
-            'ddd' => '01',
-            'number' => '923456780'
-        ],
-        'sex' => 'other',
-        'born_at' => '1970-01-01',
-    ],
-    'amount' => 10000,
-    'split_rules' => [
-        [
-            'recipient_id' => 're_abc1234abc1234abc1234abc1',
-            'percentage' => 20,
-            'liable' => true,
-            'charge_processing_fee' => true,
-        ],
-        [
-            'recipient_id' => 're_abc1234abc1234abc1234abc1',
-            'percentage' => 80,
-            'liable' => true,
-            'charge_processing_fee' => true,
-        ]
-    ],
-    'metadata' => [
-        'foo' => 'bar'
-    ]
-]);
-```
-
-### Retornando uma assinatura
-
-```php
-<?php
-$substription = $pagarme->subscriptions()->get([
-    'id' => 123456
-]);
-```
-
-### Retornando assinaturas
-
-```php
-<?php
-$substription = $pagarme->subscriptions()->getList();
-```
-
-Se necessário, você pode aplicar filtros em sua busca. Por exemplo, se quiser trazer todas as assinatura de um certo plano, você pode utilizar o código abaixo:
-
-```php
-<?php
-$planSubstriptions = $pagarme->subscriptions()->getList([
-    'plan_id' => 'ID_DO_PLANO'
-]);
-```
-
-### Atualizando uma assinatura
-
-```php
-<?php
-$updatedSubscription = $pagarme->subscriptions()->update([
-    'id' => 1234,
-    'plan_id' => 4321,
-    'payment_method' => 'boleto'
-]);
-```
-
-### Cancelando uma assinatura
-
-```php
-<?php
-$canceledSubscription = $pagarme->subscriptions()->cancel([
-    'id' => 12345
-]);
-```
-
-### Transações de assinatura
-```php
-<?php
-$substriptionTransactions = $pagarme->subscriptions()->transactions([
-    'subscription_id' => 1245
-]);
-```
-
-### Pulando cobranças
-
-```php
-<?php
-$settledCharges = $pagarme->subscriptions()->settleCharges([
-    'id' => 12345,
-    'charges' => 5
-]);
-```
-
-## Postbacks
-
-Ao criar uma transação ou uma assinatura você tem a opção de passar o parâmetro postback_url na requisição. Essa é uma URL do seu sistema que irá então receber notificações a cada alteração de status dessas transações/assinaturas.
-
-Para obter informações sobre postbacks, 3 informações serão necessárias, sendo elas: `model`, `model_id` e `postback_id`.
-
-`model`: Se refere ao objeto que gerou aquele POSTback. Pode ser preenchido com o valor `transaction` ou `subscription`.
-
-`model_id`: Se refere ao ID do objeto que gerou ao POSTback, ou seja, é o ID da transação ou assinatura que você quer acessar os POSTbacks.
-
-`postback_id`: Se refere à notificação específica. Para cada mudança de status de uma assinatura ou transação, é gerado um POSTback. Cada POSTback pode ter várias tentativas de entregas, que podem ser identificadas pelo campo `deliveries`, e o ID dessas tentativas possui o prefixo `pd_`. O campo que deve ser enviado neste parâmetro é o ID do POSTback, que deve ser identificado pelo prefixo `po_`. 
-
-### Retornando postbacks
-
-```php
-<?php
-$postbacks = $pagarme->postbacks()->getList([
-    'model' => 'subscription',
-    'model_id' => 'ID_DA_ASSINATURA'
-]);
-```
-
-### Retornando um postback
-
-```php
-<?php
-$postback = $pagarme->postbacks()->get([
-    'model' => 'transaction',
-    'model_id' => 'ID_DA_TRANSAÇÃO',
-    'postback_id' => 'po_cjlzhftd2006xg573fwelfg9y'
-]);
-
-```
-### Reenviando um postback
-
-```php
-<?php
-$postbackRedeliver = $pagarme->postbacks()->redeliver([
-    'model' => 'subscription',
-    'model_id' => 'ID_DA_ASSINATURA',
-    'postback_id' => 'po_cjlzhftd2006xg573fwelfg9y'
-]);
-```
-
-### Validando uma requisição de postback
-
-```php
-<?php
-$postbackPayload = file_get_contents('php://input');
-$signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];
-$postbackIsValid = $pagarme->postbacks()->validate($postbackPayload, $signature);
-```
-
-Observação: o código acima serve somente de exemplo para que o processo de validação funcione. Recomendamos que utilize ferramentas fornecidas por bibliotecas ou frameworks para recuperar estas informações de maneira mais adequada.
-
-## Saldo do recebedor principal
-
-Para saber o saldo de sua conta, você pode utilizar esse código:
-
-```php
-<?php
-$balance = $pagarme->balances()->get();
-```
-
-## Operações de saldo
-
-Com este objeto você pode acompanhar todas as movimentações financeiras ocorridas em sua conta Pagar.me.
-
-### Histórico das operações
-
-```php
-<?php
-$balanceOperations = $pagarme->balanceOperations()->getList();
-```
-
-Se necessário, você pode passar filtros como parâmetro, por exemplo:
-
-```php
-<?php
-$balanceOperations = $pagarme->balanceOperations()->getList([
-    'status' => 'available'
-]);
-```
-
-
-### Histórico de uma operação específica
-
-```php
-<?php
-$balanceOperation = $pagarme->balanceOperations()->get([
-    'id' => 'BALANCE_OPERATION_ID'
-]);
-```
-## Recebível
-
-Objeto contendo os dados de um recebível. O recebível (payable) é gerado automaticamente após uma transação ser paga. Para cada parcela de uma transação é gerado um recebível, que também pode ser dividido por recebedor (no caso de um split ter sido feito).
-
-### Retornando recebíveis
-
-```php
-<?php
-$payables = $pagarme->payables()->getList();
-```
-
-Se necessário, você pode aplicar filtros na busca dos payables, por exemplo, você pode recuperar todos os payables de uma transação:
-
-```php
-<?php
-$transactionPayables = $pagarme->payables()->getList([
-    'transaction_id' => 'ID_DA_TRANSAÇÃO'
-]);
-```
-
-### Retornando um recebível
-
-```php
-<?php
-$payable = $pagarme->payables()->get([
-    'id' => 'ID_DO_PAYABLE'
-]);
-```
-
-## Transferências
-Transferências representam os saques de sua conta.
-
-### Criando uma transferência
-```php
-<?php
-$transfer = $pagarme->transfers()->create([
-    'amount' => 1000,
-    'recipient_id' => 're_cjeptpdyg03u3cb6elj68p5ej'
-]);
-```
-
-### Retornando transferências
-
-```php
-<?php
-$transfers = $pagarme->transfers()->getList();
-```
-
-Se necessário, você pode aplicar filtros em sua busca, por exemplo:
-
-```php
-<?php
-$recipientTransfers = $pagarme->transfers()->getList([
-    'recipient_id' => 'ID_DO_RECEBEDOR'
-]);
-```
-
-### Retornando uma transferência
-
-```php
-<?php
-$transfer = $pagarme->transfers()->get([
-    'id' => 'ID_DA_TRANSFERÊNCIA'
-]);
-```
-
-### Cancelando uma transferência
-
-```php
-<?php
-$canceledTransfer = $pagarme->transfers()->cancel([
-    'id' => 'ID_DA_TRANSFERÊNCIA'
-]);
-```
-
-## Antecipações
-
-Para entender o que são as antecipações, você deve acessar esse [link](https://docs.pagar.me/docs/overview-antecipacao).
-
-### Criando uma antecipação
-
-```php
-<?php
-$anticipation = $pagarme->bulkAnticipations()->create([
-    'recipient_id' => 're_cjeptpdyg03u3cb6elj68p5ej',
-    'build' => 'true',
-    'payment_date' => '1536883200000',
-    'requested_amount' => '300000',
-    'timeframe' => 'start'
-]);
-```
-
-### Obtendo os limites de antecipação
-
-```php
-<?php
-$anticipationLimits = $pagarme->bulkAnticipations()->getLimits([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-    'payment_date' => '1536883200000',
-    'timeframe' => 'start'
-]);
-```
-
-### Confirmando uma antecipação building
-
-```php
-<?php
-$confirmedAnticipation = $pagarme->bulkAnticipations()->confirm([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-    'bulk_anticipation_id' => 'ID_DA_ANTECIPAÇÃO',
-]);
-```
-
-### Cancelando uma antecipação pending
-
-```php
-<?php
-$canceledAnticipation = $pagarme->bulkAnticipations()->cancel([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-    'bulk_anticipation_id' => 'ID_DA_ANTECIPAÇÃO',
-]);
-```
-
-### Deletando uma antecipação building
-
-```php
-<?php
-$deletedAnticipation = $pagarme->bulkAnticipations()->delete([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-    'bulk_anticipation_id' => 'ID_DA_ANTECIPAÇÃO',
-]);
-```
-
-### Retornando antecipações
-
-```php
-<?php
-$anticipations = $pagarme->bulkAnticipations()->getList([
-    'recipient_id' => 'ID_DO_RECEBEDOR'
-]);
-```
-
-Se necessário, você pode aplicar filtros nessa busca, por exemplo, pelo valor antecipado:
-
-```php
-<?php
-$anticipations = $pagarme->bulkAnticipations()->getList([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-    'amount' => 'VALOR_ANTECIPADO'
-]);
-```
-
-## Contas bancárias
-
-Contas bancárias identificam para onde será enviado o dinheiro de futuros pagamentos.
-
-### Criando uma conta bancária
-
-```php
-<?php
-$bankAccount = $pagarme->bankAccounts()->create([
-    'bank_code' => '341',
-    'agencia' => '0932',
-    'agencia_dv' => '5',
-    'conta' => '58054',
-    'conta_dv' => '1',
-    'document_number' => '26268738888',
-    'legal_name' => 'API BANK ACCOUNT'
-]);
-```
-
-### Retornando uma conta bancária
-
-```php
-<?php
-$bankAccount = $pagarme->bankAccounts()->get([
-    'id' => 'ID_DA_CONTA_BANCÁRIA'
-]);
-```
-
-### Retornando contas bancárias
-
-```php
-<?php
-$bankAccounts = $pagarme->bankAccounts()->getList();
-```
-
-Se quiser, você pode aplicar filtros para a busca de contas bancárias, como por exemplo, filtrar pelo código do banco:
-
-```php
-<?php
-$bankAccounts = $pagarme->bankAccounts()->getList([
-    'bank_code' => '341'
-]);
-```
-
-## Recebedores
-
-Para dividir uma transação entre várias entidades, é necessário ter um recebedor para cada uma dessas entidades. Recebedores contém informações da conta bancária para onde o dinheiro será enviado, e possuem outras informações para saber quanto pode ser antecipado por ele, ou quando o dinheiro de sua conta será sacado automaticamente.
-
-### Criando um recebedor
-
-```php
-<?php
-$recipient = $pagarme->recipients()->create([
-    'anticipatable_volume_percentage' => '85', 
-    'automatic_anticipation_enabled' => 'true', 
-    'bank_account_id' => '17899179', 
-    'transfer_day' => '5', 
-    'transfer_enabled' => 'true', 
-    'transfer_interval' => 'weekly'
-]);
-```
-
-### Retornando recebedores
-
-```php
-<?php
-$recipients = $pagarme->recipients()->getList();
-```
-
-Se necessário, você pode aplicar filtros nessa busca. Por exemplo, se quiser retornar todos os recebedores, com transferência habilitada, você pode utilizar esse código:
-
-```php
-<?php
-$transferEnabledRecipients = $pagarme->recipients()->getList([
-    'transfer_enabled' => true
-]);
-```
-
-### Retornando um recebedor
-
-```php
-<?php
-$recipient = $pagarme->recipients()->get([
-    'id' => 'ID_DO_RECEBEDOR'
-]);
-
-```
-
-### Atualizando um recebedor
-
-```php
-<?php
-$updatedRecipient = $pagarme->recipients()->update([
-    'id' => 'ID_DO_RECEBEDOR',
-    'anticipatable_volume_percentage' => 80,
-    'transfer_day' => 4
-]);
-```
-
-### Saldo de um recebedor
-
-```php
-<?php
-$recipientBalance = $pagarme->recipients()->getBalance([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-]);
-```
-
-### Operações de saldo de um recebedor
-
-```php
-<?php
-$recipientBalanceOperations = $pagarme->recipients()->listBalanceOperation([
-    'recipient_id' => 'ID_DO_RECEBEDOR'
-]);
-```
-
-### Operação de saldo específica de um recebedor
-
-```php
-<?php
-$recipientBalanceOperation = $pagarme->recipients()->getBalanceOperation([
-    'recipient_id' => 'ID_DO_RECEBEDOR',
-    'balance_operation_id' => 'ID_DA_OPERAÇÃO'
+$card = $pagarme->cards()->delete([
+    'customer_id' => 'ID_DO_CLIENTE',
+    'card_id' => 'ID_DO_CARTÃO'
 ]);
 ```
 
 ## Clientes
 
-Clientes representam os usuários de sua loja, ou negócio. Este objeto contém informações sobre eles, como nome, e-mail e telefone, além de outros campos.
+Clientes representam os usuários de sua loja, ou negócio. Este objeto contém informações sobre eles, como nome, e-mail e
+telefone, além de outros campos.
 
 ### Criando um cliente
 
 ```php
 <?php
 $customer = $pagarme->customers()->create([
-    'external_id' => '#123456789',
-    'name' => 'João das Neves',
+    'code' => 231432,
+    'name' => 'Nome do cliente',
     'type' => 'individual',
-    'country' => 'br',
-    'email' => 'joaoneves@norte.com',
-    'documents' => [
-      [
-        'type' => 'cpf',
-        'number' => '11111111111'
-      ]
+    'email' => 'cliente@email.com'
+    'document' => '12345678901',
+    'document_type' => 'CPF'
+    'gender' => 'female',
+    'address' => [
+        'country' => 'BR',
+        'state' => 'Bahia',
+        'city' => 'Barreiras',
+        'zip_code' => '00000000',
+        'line_1' => '120, Rua dos Anjos, São Gonçalo',
+        'line_2' => 'apartamento, 1º andar'
     ],
-    'phone_numbers' => [
-      '+5511999999999',
-      '+5511888888888'
+    'phones' => [
+        'home_phone' => [
+            'country_code' => '55',
+            'area_code' => '77',
+            'number' => '999305687'
+        ],
+        'mobile_phone' => [
+            'country_code' => '55',
+            'area_code' => '77',
+            'number' => '999305688'
+        ],    
     ],
-    'birthday' => '1985-01-01'
+    'birthdate' => '2020-10-10'
 ]);
 ```
+
+### Atualizando um cliente
+
+```php
+<?php
+$customerUpdated = $pagarme->customers()->update([
+    'customer_id' => 231432,
+    'name' => 'Nome do cliente',
+    'type' => 'individual',
+    'email' => 'cliente@email.com'
+    'document' => '12345678901',
+    'document_type' => 'CPF'
+    'gender' => 'female',
+    'address' => [
+        'country' => 'BR',
+        'state' => 'Bahia',
+        'city' => 'Barreiras',
+        'zip_code' => '00000000',
+        'line_1' => '120, Rua dos Anjos, São Gonçalo',
+        'line_2' => 'apartamento, 1º andar'
+    ],
+    'phones' => [
+        'home_phone' => [
+            'country_code' => '55',
+            'area_code' => '77',
+            'number' => '999305687'
+        ],
+        'mobile_phone' => [
+            'country_code' => '55',
+            'area_code' => '77',
+            'number' => '999305688'
+        ],    
+    ],
+    'birthdate' => '2020-10-10'
+]);
+```
+
 ### Retornando clientes
 
 ```php
@@ -1084,93 +567,88 @@ $customer = $pagarme->customers()->get([
 ]);
 ```
 
-## Links de pagamento
+## Endereços do cliente
 
-### Criando um link de pagamento
+Seu cliente pode ter um ou vários endereços cadastrados, sendo assim, você poderá manipulá-los através desta seção.
+
+### Criando um endereço
 
 ```php
 <?php
-$paymentLink = $pagarme->paymentLinks()->create([
-    'amount' => 10000,
-    'items' => [
-        [
-            'id' => '1',
-            'title' => "Fighter's Sword",
-            'unit_price' => 4000,
-            'quantity' => 1,
-            'tangible' => true,
-            'category' => 'weapon',
-            'venue' => 'A Link To The Past',
-            'date' => '1991-11-21'
-        ],
-        [
-            'id' => '2',
-            'title' => 'Kokiri Sword',
-            'unit_price' => 6000,
-            'quantity' => 1,
-            'tangible' => true,
-            'category' => 'weapon',
-            'venue' => "Majora's Mask",
-            'date' => '2000-04-27'
-        ],
-    ],
-    'payment_config' => [
-        'boleto' => [
-            'enabled' => true,
-            'expires_in' => 20
-        ],
-        'credit_card' => [
-            'enabled' => true,
-            'free_installments' => 4,
-            'interest_rate' => 25,
-            'max_installments' => 12
-        ],
-        'default_payment_method' => 'boleto'
-    ],
-    'max_orders' => 1,
-    'expires_in' => 60
+$address = $pagarme->addresses()->create([
+    'customer_id' => 'ID_DO_CLIENTE',
+    'country' => 'BR',
+    'state' => 'Bahia',
+    'city' => 'Barreiras',
+    'zip_code' => '00000000',
+    'line_1' => '120, Rua dos Anjos, São Gonçalo',
+    'line_2' => 'apartamento, 1º andar'
 ]);
 ```
 
-### Retornando links de pagamento
+### Atualizando um endereço
 
 ```php
 <?php
-$paymentLinks = $pagarme->paymentLinks()->getList();
-```
-
-### Retornando um link de pagamento
-
-```php
-<?php
-$paymentLink = $pagarme->paymentLinks()->get([
-    'id' => 'ID_DO_LINK_DE_PAGAMENTO'
+$addressUpdated = $pagarme->addresses()->update([
+    'address_id' => 'ID_DO_ENDERECO',
+    'customer_id' => 'ID_DO_CLIENTE',
+    'line_2' => 'apartamento, 1º andar'
 ]);
 ```
 
-### Cancelando um link de pagamento
+### Retornando endereços
 
 ```php
 <?php
-$canceledPaymentLink = $pagarme->paymentLinks()->cancel([
-    'id' => 'ID_DO_LINK_DE_PAGAMENTO'
+$address = $pagarme->addresses()->getList([
+    'customer_id' => 'ID_DO_CLIENTE'
 ]);
 ```
 
-## Buscas avançadas (Elasticsearch)
-
-### Realizando uma busca
+### Retornando um endereço
 
 ```php
 <?php
-$search = $pagarme->search()->get([                
-    "type" => "transaction",
-    "query" => [
-        "query" => [
-            "terms" => [
-                "items.id" => [8, 9] // Busca transações com itens de ID 8 e 9
-            ]
-        ]
-    ]
+$address = $pagarme->addresses()->get([
+    'address_id' => 'ID_DO_ENDERECO',
+    'customer_id' => 'ID_DO_CLIENTE'
 ]);
+```
+
+### Deletando um endereço
+
+```php
+<?php
+$address = $pagarme->addresses()->delete([
+    'address_id' => 'ID_DO_ENDERECO',
+    'customer_id' => 'ID_DO_CLIENTE'
+]);
+```
+
+## Tratando exceções
+
+Caso a API retorne um erro, a biblioteca irá lançar uma exceção do tipo `PagarMe\Exceptions\PagarMeException`.
+Para capturar esta exceção, você deve utilizar o bloco `try/catch` e tratar o erro da forma que desejar.
+
+Exemplo:
+
+```php
+try {
+    $customers = $pagarme->customers()->getList();
+} catch (BrasilApiException $e) {
+    echo $e->getMessage(); // Retorna a mensagem de erro da API
+    echo $e->getCode(); // Retorna o código HTTP da API
+    echo $e->getErrors(); // Retorna os erros retornados pela API
+    echo $e->getRawResponse(); // Retorna a resposta bruta da API
+}
+```
+
+## Testes
+
+Neste projeto é utilizado o [PHPUnit](https://phpunit.de) para a implementação de testes automatizados.
+Para rodá-los, execute o seguinte comando:
+
+```bash
+composer test
 ```

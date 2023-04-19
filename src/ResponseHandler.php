@@ -11,12 +11,12 @@ class ResponseHandler
     /**
      * @param string $payload
      *
-     * @throws \PagarMe\Exceptions\InvalidJsonException
-     * @return \ArrayObject
+     * @return array
+     *@throws InvalidJsonException
      */
-    public static function success($payload)
+    public static function success(string $payload): array
     {
-        return self::toJson($payload);
+        return self::toArray($payload);
     }
 
     /**
@@ -25,7 +25,7 @@ class ResponseHandler
      * @throws PagarMeException
      * @return void
      */
-    public static function failure(\Exception $originalException)
+    public static function failure(\Exception $originalException): void
     {
         throw self::parseException($originalException);
     }
@@ -33,38 +33,36 @@ class ResponseHandler
     /**
      * @param ClientException $guzzleException
      *
-     * @return PagarMeException|ClientException
+     * @return PagarMeException
      */
-    private static function parseException(ClientException $guzzleException)
+    private static function parseException(ClientException $guzzleException): PagarMeException
     {
         $response = $guzzleException->getResponse();
-
-        if (is_null($response)) {
-            return $guzzleException;
-        }
-
+    
         $body = $response->getBody()->getContents();
 
         try {
-            $jsonError = self::toJson($body);
+            $responseAsArray = self::toArray($body);
         } catch (InvalidJsonException $invalidJson) {
-            return $guzzleException;
+            $responseAsArray = [];
         }
 
         return new PagarMeException(
-            $jsonError->errors[0]->type,
-            $jsonError->errors[0]->parameter_name,
-            $jsonError->errors[0]->message
+            $responseAsArray["message"] ?? "An error occurred",
+            $response->getStatusCode(),
+            $responseAsArray["errors"] ?? [],
+            $body
         );
     }
-
+    
     /**
      * @param string $json
-     * @return \ArrayObject
+     * @return array
+     * @throws InvalidJsonException
      */
-    private static function toJson($json)
+    private static function toArray(string $json): array
     {
-        $result = json_decode($json);
+        $result = json_decode($json, true);
 
         if (json_last_error() != \JSON_ERROR_NONE) {
             throw new InvalidJsonException(json_last_error_msg());

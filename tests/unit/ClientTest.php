@@ -2,11 +2,11 @@
 
 namespace PagarMe\Test;
 
+use GuzzleHttp\Exception\ClientException;
 use PagarMe\PagarMe;
 use PagarMe\Client;
 use PagarMe\Exceptions\PagarMeException;
 use PagarMe\Endpoints\Endpoint;
-use PagarMe\Endpoints\Transactions;
 use PagarMe\Endpoints\Customers;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Handler\MockHandler;
@@ -16,7 +16,7 @@ use GuzzleHttp\Psr7\Response;
 
 final class ClientTest extends TestCase
 {
-    public function testSuccessfulResponse()
+    public function testSuccessfulResponse(): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -28,29 +28,17 @@ final class ClientTest extends TestCase
 
         $client = new Client('apiKey', ['handler' => $handler]);
 
-        $response = $client->request(Endpoint::POST, 'transactions');
+        $response = $client->request(Endpoint::POST, 'orders');
 
-        $this->assertEquals($response->status, "Ok!");
-        $this->assertEquals(
-            'api_key=apiKey',
-            $container[0]['request']->getUri()->getQuery()
-        );
+        $this->assertEquals($response["status"], "Ok!");
     }
-
-    /**
-     * @expectedException \PagarMe\Exceptions\PagarMeException
-     */
-    public function testPagarMeFailedResponse()
+    
+    public function testPagarMeFailedResponse(): void
     {
+        $this->expectException(PagarMeException::class);
         $mock = new MockHandler([
-            new Response(401, [], '{
-                "errors": [{
-                    "message": "api_key está faltando",
-                    "parameter_name": "api_key",
-                    "type": "invalid_parameter"
-                }],
-                "method": "get",
-                "url": "/transactions"
+            new Response(401, [], '{   
+                "message": "api_key está faltando"  
             }')
         ]);
 
@@ -58,32 +46,24 @@ final class ClientTest extends TestCase
 
         $client = new Client('apiKey', ['handler' => $handler]);
 
-        $errorType = 'invalid_parameter';
-        $parameter = 'api_key';
         $message = 'api_key está faltando';
         $expectedExceptionMessage = sprintf(
-            'ERROR TYPE: %s. PARAMETER: %s. MESSAGE: %s',
-            $errorType,
-            $parameter,
+            '%s',
             $message
         );
 
         try {
-            $response = $client->request(Endpoint::POST, 'transactions');
+            $response = $client->request(Endpoint::POST, 'orders');
         } catch (\PagarMe\Exceptions\PagarMeException $exception) {
             $this->assertEquals($expectedExceptionMessage, $exception->getMessage());
-            $this->assertEquals($parameter, $exception->getParameterName());
-            $this->assertEquals($errorType, $exception->getType());
 
             throw $exception;
         }
     }
-
-    /**
-     * @expectedException \GuzzleHttp\Exception\ServerException
-     */
-    public function testRequestFailedResponse()
+    
+    public function testRequestFailedResponse(): void
     {
+        $this->expectException(\GuzzleHttp\Exception\ServerException::class);
         $mock = new MockHandler([
             new Response(502, [], '<div>Bad Gateway</div>')
         ]);
@@ -117,13 +97,9 @@ final class ClientTest extends TestCase
             ]
         );
 
-        $response = $client->request(Endpoint::POST, 'transactions');
+        $response = $client->request(Endpoint::POST, 'orders');
 
-        $this->assertEquals($response->status, "Ok!");
-        $this->assertEquals(
-            'api_key=apiKey',
-            $container[0]['request']->getUri()->getQuery()
-        );
+        $this->assertEquals("Ok!", $response["status"]);
 
         $expectedUserAgent = sprintf(
             'MyCustomApplication/10.2.2 pagarme-php/%s php/%s',
@@ -153,16 +129,7 @@ final class ClientTest extends TestCase
         );
     }
 
-    public function testTransactions()
-    {
-        $client = new Client('apiKey');
-
-        $transactions = $client->transactions();
-
-        $this->assertInstanceOf(Transactions::class, $transactions);
-    }
-
-    public function testCustomers()
+    public function testCustomers(): void
     {
         $client = new Client('apiKey');
 

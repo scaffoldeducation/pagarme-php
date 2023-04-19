@@ -1,0 +1,96 @@
+[
+  {
+    "id": "or_pZgoBsfksldeGLy",
+    "code": "58323427",
+    "amount": 50990,
+    "currency": "BRL",
+    "closed": true,
+    "items": [
+      {
+        "id": "oi_2m5ssf345pP",
+        "type": "product",
+        "description": "Bicicleta Oggi Hacker (Preta, M)",
+        "amount": 50990,
+        "quantity": 1,
+        "status": "active",
+        "created_at": "2022-06-08T18:43:45Z",
+        "updated_at": "2022-06-08T18:43:45Z",
+        "code": "123342345"
+      }
+    ],
+    "customer": {
+      "id": "cus_aa3aQMasddRx0WZ",
+      "name": "Usuário Teste",
+      "email": "teste@gmail.com",
+      "document": "06953424493",
+      "delinquent": false,
+      "created_at": "2022-05-25T13:15:36Z",
+      "updated_at": "2022-05-25T13:32:30Z",
+      "phones": {
+        "home_phone": {
+          "country_code": "55",
+          "number": "999999999",
+          "area_code": "77"
+        },
+        "mobile_phone": {
+          "country_code": "55",
+          "number": "888888888",
+          "area_code": "77"
+        }
+      }
+    },
+    "shipping": {
+      "description": "Entrega",
+      "address": {
+        "street": "Av. Antônio Carlos Magalhães",
+        "number": "567",
+        "neighborhood": "Centro",
+        "city": "Barreiras",
+        "state": "BA",
+        "country": "BR",
+        "zip_code": "00000000",
+        "line_1": "567, Av. Antônio Carlos Magalhães, Centro"
+      }
+    },
+    "status": "paid",
+    "created_at": "2022-06-08T18:43:45Z",
+    "updated_at": "2022-06-08T18:43:49Z",
+    "closed_at": "2022-06-08T18:43:45Z",
+    "charges": [
+      {
+        "id": "ch_Mwdgf064deY5v",
+        "code": "46672344",
+        "gateway_id": "26545",
+        "amount": 48441,
+        "paid_amount": 48441,
+        "status": "paid",
+        "currency": "BRL",
+        "payment_method": "pix",
+        "paid_at": "2022-06-08T18:43:49Z",
+        "created_at": "2022-06-08T18:43:45Z",
+        "updated_at": "2022-06-08T18:43:49Z",
+        "customer": {
+          "id": "cus_aa3aQMasddRx0WZ",
+          "name": "Usuário Teste",
+          "email": "teste@gmail.com",
+          "document": "06953424493",
+          "delinquent": false,
+          "created_at": "2022-05-25T13:15:36Z",
+          "updated_at": "2022-05-25T13:32:30Z",
+          "phones": {
+            "home_phone": {
+              "country_code": "55",
+              "number": "999999999",
+              "area_code": "77"
+            },
+            "mobile_phone": {
+              "country_code": "55",
+              "number": "888888888",
+              "area_code": "77"
+            }
+          }
+        }
+      }
+    ]
+  }
+]

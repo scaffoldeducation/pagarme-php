@@ -5,62 +5,47 @@ namespace PagarMe\Exceptions;
 final class PagarMeException extends \Exception
 {
     /**
-     * @var string
+     * @var array
      */
-    private $type;
+    private array $errors;
 
     /**
      * @var string
      */
-    private $parameterName;
+    private string $response;
 
     /**
-     * @var string
+     * @param string $message
+     * @param int $code
+     * @param array $errors
+     * @param string $response
      */
-    private $errorMessage;
-
-    /**
-     * @param string $type
-     * @param string $parameterName
-     * @param string $errorMessage
-     */
-    public function __construct($type, $parameterName, $errorMessage)
+    public function __construct(
+        string $message,
+        int $code = 0,
+        array $errors = [],
+        string $response = "",
+    )
     {
-        $this->type = $type;
-        $this->parameterName = $parameterName;
-        $this->errorMessage = $errorMessage;
+        $this->errors = $errors;
+        $this->response = $response;
 
-        $exceptionMessage = $this->buildExceptionMessage();
+        parent::__construct($message, $code);
+    }
 
-        parent::__construct($exceptionMessage);
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 
     /**
      * @return string
      */
-    private function buildExceptionMessage()
+    public function getResponse(): string
     {
-        return sprintf(
-            'ERROR TYPE: %s. PARAMETER: %s. MESSAGE: %s',
-            $this->type,
-            $this->parameterName,
-            $this->errorMessage
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getParameterName()
-    {
-        return $this->parameterName;
+        return $this->response;
     }
 }

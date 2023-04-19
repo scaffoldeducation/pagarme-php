@@ -10,9 +10,10 @@ class RequestHandler
      *
      * @return array
      */
-    public static function bindApiKeyToQueryString(array $options, $apiKey)
+    public static function bindApiKeyToHeader(array $options, string $apiKey): array
     {
-        $options['query']['api_key'] = $apiKey;
+        $options['auth'][] = $apiKey;
+        $options['auth'][] = "";
 
         return $options;
     }

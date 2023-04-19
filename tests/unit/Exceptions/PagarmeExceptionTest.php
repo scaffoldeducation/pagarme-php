@@ -10,23 +10,21 @@ final class PagarMeExceptionTest extends TestCase
     /**
      * @test
      */
-    public function buildExceptionMessage()
+    public function buildExceptionMessage(): void
     {
-        $exception = new PagarMeException(
-            'InvalidType',
-            'items',
-            'value must be array'
-        );
-        $errorType = 'InvalidType';
-        $parameter = 'items';
+        $errorCode = 400;
         $message = 'value must be array';
 
+        $exception = new PagarMeException(
+            $message,
+            $errorCode
+        );
+
         $expectedMessage = sprintf(
-            'ERROR TYPE: %s. PARAMETER: %s. MESSAGE: %s',
-            $errorType,
-            $parameter,
+            '%s',
             $message
         );
         $this->assertEquals($expectedMessage, $exception->getMessage());
+        $this->assertEquals($errorCode, $exception->getCode());
     }
 }

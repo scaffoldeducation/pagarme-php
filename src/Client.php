@@ -2,26 +2,13 @@
 
 namespace PagarMe;
 
-use PagarMe\PagarMe;
-use PagarMe\RequestHandler;
-use PagarMe\ResponseHandler;
-use PagarMe\Endpoints\BankAccounts;
-use PagarMe\Endpoints\BulkAnticipations;
-use PagarMe\Endpoints\Transactions;
-use PagarMe\Endpoints\Customers;
+use PagarMe\Endpoints\Addresses;
 use PagarMe\Endpoints\Cards;
-use PagarMe\Endpoints\Recipients;
-use PagarMe\Endpoints\PaymentLinks;
-use PagarMe\Endpoints\Plans;
-use PagarMe\Endpoints\Transfers;
-use PagarMe\Endpoints\Subscriptions;
-use PagarMe\Endpoints\Refunds;
-use PagarMe\Endpoints\Postbacks;
-use PagarMe\Endpoints\Balances;
-use PagarMe\Endpoints\Payables;
-use PagarMe\Endpoints\BalanceOperations;
-use PagarMe\Endpoints\Chargebacks;
-use PagarMe\Endpoints\Search;
+use PagarMe\Endpoints\Charges;
+use PagarMe\Endpoints\Customers;
+use PagarMe\Endpoints\OrderItems;
+use PagarMe\Endpoints\Orders;
+use PagarMe\Exceptions\PagarMeException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException as ClientException;
 use PagarMe\Exceptions\InvalidJsonException;
@@ -31,7 +18,7 @@ class Client
     /**
      * @var string
      */
-    const BASE_URI = 'https://api.pagar.me:443/1/';
+    const BASE_URI = 'https://api.pagar.me/core/v5/';
 
     /**
      * @var string header used to identify application's requests
@@ -39,105 +26,50 @@ class Client
     const PAGARME_USER_AGENT_HEADER = 'X-PagarMe-User-Agent';
 
     /**
-     * @var \GuzzleHttp\Client
+     * @var HttpClient
      */
-    private $http;
+    private HttpClient $http;
 
     /**
      * @var string
      */
-    private $apiKey;
+    private string $apiKey;
+    
+    /**
+     * @var Orders
+     */
+    private Orders $orders;
+    
+    /**
+     * @var OrderItems
+     */
+    private OrderItems $orderItems;
+    
+    /**
+     * @var Charges
+     */
+    private Charges $charges;
 
     /**
-     * @var \PagarMe\Endpoints\Transactions
+     * @var Customers
      */
-    private $transactions;
+    private Customers $customers;
 
     /**
-     * @var \PagarMe\Endpoints\Customers
+     * @var Addresses
      */
-    private $customers;
+    private Addresses $addresses;
 
     /**
-     * @var \PagarMe\Endpoints\Cards
+     * @var Cards
      */
-    private $cards;
-
-    /**
-     * @var \PagarMe\Endpoints\Recipients
-     */
-    private $recipients;
-
-    /**
-     * @var \PagarMe\Endpoints\BankAccounts
-     */
-    private $bankAccounts;
-
-    /**
-     * @var \PagarMe\Endpoints\Plans
-     */
-    private $plans;
-
-    /**
-     * @var \PagarMe\Endpoints\BulkAnticipations
-     */
-    private $bulkAnticipations;
-
-    /**
-     * @var \PagarMe\Endpoints\PaymentLinks
-     */
-    private $paymentLinks;
-
-    /**
-     * @var \PagarMe\Endpoints\Transfers
-     */
-    private $transfers;
-
-    /**
-     * @var \PagarMe\Endpoints\Subscriptions
-     */
-    private $subscriptions;
-
-    /**
-     * @var \PagarMe\Endpoints\Refunds
-     */
-    private $refunds;
-
-    /**
-     * @var \PagarMe\Endpoints\Postbacks
-     */
-    private $postbacks;
-
-    /**
-     * @var \PagarMe\Endpoints\Balances
-     */
-    private $balances;
-
-    /**
-     * @var \PagarMe\Endpoints\Payables
-     */
-    private $payables;
-
-    /**
-     * @var \PagarMe\Endpoints\BalanceOperations
-     */
-    private $balanceOperations;
-
-    /**
-     * @var \PagarMe\Endpoints\Chargebacks
-     */
-    private $chargebacks;
-
-    /**
-     * @var \PagarMe\Endpoints\Search
-     */
-    private $search;
+    private Cards $cards;
 
     /**
      * @param string $apiKey
      * @param array|null $extras
      */
-    public function __construct($apiKey, array $extras = null)
+    public function __construct(string $apiKey, array $extras = null)
     {
         $this->apiKey = $apiKey;
 
@@ -147,32 +79,19 @@ class Client
             $options = array_merge($options, $extras);
         }
 
-        $userAgent = isset($options['headers']['User-Agent']) ?
-            $options['headers']['User-Agent'] :
-            '';
+        $userAgent = $options['headers']['User-Agent'] ?? '';
 
         $options['headers']['User-Agent'] = $this->addUserAgentHeaders($userAgent);
         $options['headers']['X-PagarMe-User-Agent'] = $this->addUserAgentHeaders($userAgent);
 
         $this->http = new HttpClient($options);
-
-        $this->transactions = new Transactions($this);
+    
+        $this->orders = new Orders($this);
+        $this->orderItems = new OrderItems($this);
+        $this->charges = new Charges($this);
         $this->customers = new Customers($this);
+        $this->addresses = new Addresses($this);
         $this->cards = new Cards($this);
-        $this->recipients = new Recipients($this);
-        $this->bankAccounts = new BankAccounts($this);
-        $this->plans = new Plans($this);
-        $this->bulkAnticipations = new BulkAnticipations($this);
-        $this->paymentLinks = new PaymentLinks($this);
-        $this->transfers = new Transfers($this);
-        $this->subscriptions = new Subscriptions($this);
-        $this->refunds = new Refunds($this);
-        $this->postbacks = new Postbacks($this);
-        $this->balances = new Balances($this);
-        $this->payables = new Payables($this);
-        $this->balanceOperations = new BalanceOperations($this);
-        $this->chargebacks = new Chargebacks($this);
-        $this->search = new Search($this);
     }
 
     /**
@@ -180,18 +99,17 @@ class Client
      * @param string $uri
      * @param array $options
      *
-     * @throws \PagarMe\Exceptions\PagarMeException
-     * @return \ArrayObject
+     * @return array
      *
-     * @psalm-suppress InvalidNullableReturnType
+     * @throws PagarMeException
      */
-    public function request($method, $uri, $options = [])
+    public function request(string $method, string $uri, array $options = []): array
     {
         try {
             $response = $this->http->request(
                 $method,
                 $uri,
-                RequestHandler::bindApiKeyToQueryString(
+                RequestHandler::bindApiKeyToHeader(
                     $options,
                     $this->apiKey
                 )
@@ -210,19 +128,19 @@ class Client
     /**
      * @return string
      */
-    public function getApiKey()
+    public function getApiKey(): string
     {
         return $this->apiKey;
     }
 
     /**
-     * Build an user-agent string to be informed on requests
+     * Build a user-agent string to be informed on requests
      *
      * @param string $customUserAgent
      *
      * @return string
      */
-    private function buildUserAgent($customUserAgent = '')
+    private function buildUserAgent(string $customUserAgent = ''): string
     {
         return trim(sprintf(
             '%s pagarme-php/%s php/%s',
@@ -238,144 +156,56 @@ class Client
      * @param string $customUserAgent
      * @return string
      */
-    private function addUserAgentHeaders($customUserAgent = '')
+    private function addUserAgentHeaders(string $customUserAgent = ''): string
     {
         return $this->buildUserAgent($customUserAgent);
     }
 
     /**
-     * @return \PagarMe\Endpoints\Transactions
+     * @return Orders
      */
-    public function transactions()
+    public function orders(): Orders
     {
-        return $this->transactions;
+        return $this->orders;
     }
 
     /**
-     * @return \PagarMe\Endpoints\Customers
+     * @return OrderItems
      */
-    public function customers()
+    public function orderItems(): OrderItems
+    {
+        return $this->orderItems;
+    }
+
+    /**
+     * @return Charges
+     */
+    public function charges(): Charges
+    {
+        return $this->charges;
+    }
+
+    /**
+     * @return Customers
+     */
+    public function customers(): Customers
     {
         return $this->customers;
     }
 
     /**
-     * @return \PagarMe\Endpoints\Cards
+     * @return Addresses
      */
-    public function cards()
+    public function addresses(): Addresses
+    {
+        return $this->addresses;
+    }
+
+    /**
+     * @return Cards
+     */
+    public function cards(): Cards
     {
         return $this->cards;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Recipients
-     */
-    public function recipients()
-    {
-        return $this->recipients;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\BankAccounts
-     */
-    public function bankAccounts()
-    {
-        return $this->bankAccounts;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Plans
-     */
-    public function plans()
-    {
-        return $this->plans;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\BulkAnticipations
-     */
-    public function bulkAnticipations()
-    {
-        return $this->bulkAnticipations;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\PaymentLinks
-     */
-    public function paymentLinks()
-    {
-        return $this->paymentLinks;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Transfers
-     */
-    public function transfers()
-    {
-        return $this->transfers;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Subscriptions
-     */
-    public function subscriptions()
-    {
-        return $this->subscriptions;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Refunds
-     */
-    public function refunds()
-    {
-        return $this->refunds;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Postbacks
-     */
-    public function postbacks()
-    {
-        return $this->postbacks;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Balances
-     */
-    public function balances()
-    {
-        return $this->balances;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Payables
-     */
-    public function payables()
-    {
-        return $this->payables;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\BalanceOperations
-     */
-    public function balanceOperations()
-    {
-        return $this->balanceOperations;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Chargebacks
-     */
-    public function chargebacks()
-    {
-        return $this->chargebacks;
-    }
-
-    /**
-     * @return \PagarMe\Endpoints\Search
-     */
-    public function search()
-    {
-        return $this->search;
     }
 }
