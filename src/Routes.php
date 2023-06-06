@@ -121,6 +121,46 @@ class Routes
     /**
      * @return \PagarMe\Anonymous
      */
+    public static function cycles()
+    {
+        $anonymous = new Anonymous();
+
+        $anonymous->base = static function ($subscriptionId) {
+            return "subscriptions/$subscriptionId/cycles";
+        };
+
+        $anonymous->detail = static function ($subscriptionId, $id) {
+            return "subscriptions/$subscriptionId/cycles/$id";
+        };
+
+        $anonymous->pay = static function ($subscriptionId, $id) {
+            return "subscriptions/$subscriptionId/cycles/$id/pay";
+        };
+
+        return $anonymous;
+    }
+
+    /**
+     * @return \PagarMe\Anonymous
+     */
+    public static function invoices()
+    {
+        $anonymous = new Anonymous();
+
+        $anonymous->base = static function () {
+            return "invoices";
+        };
+
+        $anonymous->details = static function ($id) {
+            return "invoices/$id";
+        };
+
+        return $anonymous;
+    }
+
+    /**
+     * @return \PagarMe\Anonymous
+     */
     public static function orders()
     {
         $anonymous = new Anonymous();
@@ -187,6 +227,24 @@ class Routes
 
         $anonymous->details = static function ($id) {
             return "plans/$id";
+        };
+
+        return $anonymous;
+    }
+
+    /**
+     * @return \PagarMe\Anonymous
+     */
+    public static function subscriptions()
+    {
+        $anonymous = new Anonymous();
+
+        $anonymous->base = static function () {
+            return 'subscriptions';
+        };
+
+        $anonymous->details = static function ($id) {
+            return "subscriptions/$id";
         };
 
         return $anonymous;
