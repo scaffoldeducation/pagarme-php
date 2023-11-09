@@ -11,6 +11,10 @@ use PagarMe\Endpoints\Orders;
 use PagarMe\Exceptions\PagarMeException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException as ClientException;
+use PagarMe\Endpoints\Cycles;
+use PagarMe\Endpoints\Invoices;
+use PagarMe\Endpoints\Plans;
+use PagarMe\Endpoints\Subscriptions;
 use PagarMe\Exceptions\InvalidJsonException;
 
 class Client
@@ -34,17 +38,17 @@ class Client
      * @var string
      */
     private string $apiKey;
-    
+
     /**
      * @var Orders
      */
     private Orders $orders;
-    
+
     /**
      * @var OrderItems
      */
     private OrderItems $orderItems;
-    
+
     /**
      * @var Charges
      */
@@ -66,6 +70,26 @@ class Client
     private Cards $cards;
 
     /**
+     * @var Plans
+     */
+    private Plans $plans;
+
+    /**
+     * @var Subscriptions
+     */
+    private Subscriptions $subscriptions;
+
+    /**
+     * @var Cycles
+     */
+    private Cycles $cycles;
+
+    /**
+     * @var Invoices
+     */
+    private Invoices $invoices;
+
+    /**
      * @param string $apiKey
      * @param array|null $extras
      */
@@ -85,13 +109,17 @@ class Client
         $options['headers']['X-PagarMe-User-Agent'] = $this->addUserAgentHeaders($userAgent);
 
         $this->http = new HttpClient($options);
-    
+
         $this->orders = new Orders($this);
         $this->orderItems = new OrderItems($this);
         $this->charges = new Charges($this);
         $this->customers = new Customers($this);
         $this->addresses = new Addresses($this);
         $this->cards = new Cards($this);
+        $this->plans = new Plans($this);
+        $this->subscriptions = new Subscriptions($this);
+        $this->cycles = new Cycles($this);
+        $this->invoices = new Invoices($this);
     }
 
     /**
@@ -207,5 +235,37 @@ class Client
     public function cards(): Cards
     {
         return $this->cards;
+    }
+
+    /**
+     * @return Plans
+     */
+    public function plans(): Plans
+    {
+        return $this->plans;
+    }
+
+    /**
+     * @return Subscriptions
+     */
+    public function subscriptions(): Subscriptions
+    {
+        return $this->subscriptions;
+    }
+
+    /**
+     * @return Cycles
+     */
+    public function cycles(): Cycles
+    {
+        return $this->cycles;
+    }
+
+    /**
+     * @return Invoices
+     */
+    public function invoices(): Invoices
+    {
+        return $this->invoices;
     }
 }
